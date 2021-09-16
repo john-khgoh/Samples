@@ -20,7 +20,7 @@ set pass(1) [password_censored]
 for { set i 1 } { $i <= 5} { incr i } {
 
 spawn ssh root@$sv($i)  
-expect "*?assword:*"
+expect "*?ssword:*"
 send -- "$pw($i)\n"
 expect << EOF
 spawn passwd $user(1)
