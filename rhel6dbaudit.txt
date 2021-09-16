@@ -1,0 +1,44 @@
+/sbin/ifconfig | grep "inet addr:*.*.*.* Bcast" | awk '{ gsub (/addr:/,"");print $2}'
+echo ----------------------------------------
+netstat -in
+echo ----------------------------------------
+netstat -rn
+echo ----------------------------------------
+ifconfig
+echo ----------------------------------------
+ping -c4 `netstat -rn | grep UG | awk '{print $2}'`
+echo ----------------------------------------
+hostname
+date
+echo ----------------------------------------
+echo Processors:
+cat /proc/cpuinfo | grep -c processor
+cat /proc/meminfo | grep MemTotal
+echo In Gb:
+cat /proc/meminfo | grep MemTotal | awk '{sum = $2 / 1048576; print sum}'
+echo ----------------------------------------
+cat /etc/issue
+uname -a
+echo ----------------------------------------
+df -h
+java -version
+echo ----------------------------------------
+ntpq -p
+echo ----------------------------------------
+echo "Services check"
+service iptables status
+service dnsmasq status
+echo ----------------------------------------
+echo "NS Switch"
+cat /etc/nsswitch.conf | egrep -v "(^#.*|^$)"
+echo "resolv.conf"
+cat /etc/resolv.conf
+echo ----------------------------------------
+useradd -m [username_censored]
+useradd -m [username_censored]
+groupadd oinstall
+groupadd dba
+useradd -g oinstall -G dba [username_censored]
+echo ----------------------------------------
+echo " "
+echo "#######################################################################################################################################"

@@ -1,0 +1,4 @@
+
+FOR %i in ([IP_censored].42.11 [IP_censored].42.12 [IP_censored].43.15 [IP_censored].43.16 [IP_censored].42.26 [IP_censored].42.27 [IP_censored].42.122 [IP_censored].42.123 [IP_censored].42.49 [IP_censored].42.50 [IP_censored].43.30 [IP_censored].43.31 [IP_censored].43.32 [IP_censored].43.44 [IP_censored].43.45
+) DO plink.exe -t -pw [password_censored] -noagent -m C:\Users\john\Documents\perl_folder\audit_auto\rhel_gen_audit_sim5.txt admin@%i >> "C:\Users\john\Documents\Info\20140523_PRIM_hostfile_chk.txt"
+#IP and passwords have been censored

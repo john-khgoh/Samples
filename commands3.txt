@@ -1,0 +1,6 @@
+hostname >> /tmp/sys_info_test
+echo "CPU:" >> /tmp/sys_info_test
+ioscan -fk | grep -c processor >> /tmp/sys_info_test
+/usr/contrib/bin/machinfo | grep "Memory:" >> /tmp/sys_info_test
+bdf | grep db | awk '{sum = $2 / 1048576; print $6, sum}' >> /tmp/sys_info_test
+uname -a >> /tmp/sys_info_test

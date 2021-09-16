@@ -1,0 +1,50 @@
+hostname
+ifconfig | grep [IP_censored].195
+cat /etc/sysctl.conf|grep kernel.sem
+echo *0
+cat /etc/sysctl.conf|grep semmsl
+/sbin/sysctl -a | grep semmsl
+echo *1
+cat /etc/sysctl.conf|grep semmns
+/sbin/sysctl -a | grep semmns
+echo *2
+cat /etc/sysctl.conf|grep semopm
+/sbin/sysctl -a | grep semopm
+echo *3
+cat /etc/sysctl.conf|grep semmni
+/sbin/sysctl -a | grep semmni
+echo *4
+cat /etc/sysctl.conf|grep shmall
+/sbin/sysctl -a | grep shmall
+echo *5
+cat /etc/sysctl.conf|grep shmmax
+/sbin/sysctl -a | grep shmmax
+echo *6
+cat /etc/sysctl.conf|grep shmmni
+/sbin/sysctl -a | grep shmmni
+echo *7
+cat /etc/sysctl.conf|grep file-max
+/sbin/sysctl -a | grep file-max
+echo *8
+cat /etc/sysctl.conf|grep ip_local_port_range
+/sbin/sysctl -a | grep ip_local_port_range
+echo *9
+cat /etc/sysctl.conf|grep rmem_default
+/sbin/sysctl -a | grep rmem_default
+echo *10
+cat /etc/sysctl.conf|grep rmem_max
+/sbin/sysctl -a | grep rmem_max
+echo *11
+cat /etc/sysctl.conf|grep wmem_default
+/sbin/sysctl -a | grep wmem_default
+echo *12
+cat /etc/sysctl.conf|grep wmem_max
+/sbin/sysctl -a | grep wmem_max
+echo *13
+cat /etc/sysctl.conf|grep aio-max-nr
+/sbin/sysctl -a | grep aio-max-nr
+echo *14
+cat /etc/sysctl.conf|grep file_open_max_hardlimit
+/sbin/sysctl -a | grep file_open_max_hardlimit
+echo *15
+echo "##############################################################################################"

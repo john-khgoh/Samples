@@ -1,0 +1,8 @@
+hpvmstatus | awk '{print $1}' | grep -v Virt | grep -v = > /tmp/vmlist.txt
+hpvmstatus | awk '{print $4}' | grep -v Virt | grep -v = | grep -v VM > /tmp/vmstate.txt
+
+for x in `cat /tmp/vmlist.txt`; do echo $x;hpvmstatus -P $x| grep disk; echo " ";sleep 2; done >> /tmp/disklist.txt
+
+cd /tmp; mv disklist.txt `hostname`_disklist.txt
+cd /tmp; mv vmlist.txt `hostname`_vmlist.txt
+cd /tmp; mv vmstate.txt `hostname`_vmstate.txt
