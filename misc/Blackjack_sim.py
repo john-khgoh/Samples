@@ -3,7 +3,7 @@
 Blackjack_sim.py: A simple blackjack simulator where the drawn cards are not returned to the deck.
 __author__      = "John K H Goh"
 __license__ 	= "GPL"
-__version__ 	= "0.1.0"
+__version__ 	= "0.1.1"
 """
 import itertools
 from random import shuffle
@@ -76,7 +76,7 @@ class Hand:
 		
 class Blackjack:
 			
-	def __init__(self,players=4,games=10,player_threshold=17,dealer_threshold=18): 
+	def __init__(self,players=4,games=10,player_threshold=17,dealer_threshold=18,bust_aversion_ratio=0.3): 
 	#By default, 10 games will be played between 4 players including you and the dealer
 		
 		self.no_of_players = players #Total number of players including dealer
@@ -84,13 +84,23 @@ class Blackjack:
 		self.dealer_hand = Hand()
 		self.player_hands = []
 		
-		self.player_threshold = player_threshold #Threshold for players to stop hitting. 17 by default.
-		self.dealer_threshold = dealer_threshold #Threshold for dealer to stop hitting. 18 by default. 
+		self.player_threshold = player_threshold #Threshold for players to stop hitting. Default: 17
+		self.dealer_threshold = dealer_threshold #Threshold for dealer to stop hitting. Default: 18
+		self.min_allowed_card_value = 17
 		self.number_of_games=games
 		self.score = 0
+		
+		self.bust_aversion_ratio = bust_aversion_ratio #Ratio of bust that makes player more careful. Value between 0.0 and 1.0. Default: 0.3
+		self.bust_threshold = round(self.bust_aversion_ratio * self.number_of_games)
+		self.player_bust_counter = []
+		#self.player_bust_aversion = []
+		self.player_personal_threshold = []
 			
 		for _ in range(self.no_of_other_players):	
 			self.player_hands.append(Hand())
+			self.player_bust_counter.append(0)
+			#self.player_bust_aversion.append(0)
+			self.player_personal_threshold.append(self.player_threshold)
 		
 	def card_counter(self,hand):
 		
@@ -120,6 +130,8 @@ class Blackjack:
 		return total_value
 		
 	def score_keeper(self,player_hand_value,dealer_hand_value):
+		
+		
 		if(player_hand_value>21 and dealer_hand_value<=21): #You bust
 			self.score = self.score - 1
 		elif(player_hand_value<=21 and dealer_hand_value>21): #The dealer busts
@@ -143,27 +155,45 @@ class Blackjack:
 			Raise("Outcome error!")
 			
 		print("####################################################################################################")
-		
+	
+	#Bust aversion is switched on when player gets many prior busts (>bust_threshold). Players will stop hitting at a lowered threshold automatically e.g. 18 to 17
+	def bust_aversion(self):  
+		for _ in range(self.no_of_other_players):
+			if((self.player_bust_counter[_]>self.bust_threshold)&(self.player_personal_threshold[_]>self.min_allowed_card_value)):
+				#self.player_bust_aversion[_]=1
+				self.player_personal_threshold[_] = self.player_personal_threshold[_]-1
+				
 	def play(self):
 		deck = Deck(self.number_of_games,self.no_of_players)
 		deck.shuffle()
 		for i in range(self.number_of_games):
 			print("Game %d:\n" %(i+1))
+			if(self.player_threshold>self.min_allowed_card_value): #Feature switched on only when initial player threshold is more than the min. allowed card value i.e. 18 or more
+				self.bust_aversion()
+			print("Bust counter: %s" %self.player_bust_counter)
+			#print("Bust aversion: %s" %self.player_bust_aversion)
+			print("Personal thresholds: %s" %self.player_personal_threshold)
+			
 			dealer_hand_value = 0
 			player_hand_value = 0
 			player_hands_value = []
 			
-			self.dealer_hand.add_hand(deck.draw())
-			
+			#Dealing the cards for the game
 			for _ in range(self.no_of_other_players):
 				player_hands_value.append(0)
 				self.player_hands[_].add_hand(deck.draw())
+			self.dealer_hand.add_hand(deck.draw())
 			
+			#Player by player draw
 			for _ in range(self.no_of_other_players):
+				#player_threshold = self.player_threshold
+				
 				player_hands_value[_] = self.card_counter(self.player_hands[_])
-				while player_hands_value[_]<self.player_threshold:
+				while player_hands_value[_]<self.player_personal_threshold[_]:
 					self.player_hands[_].add_hand(deck.draw())
 					player_hands_value[_] = self.card_counter(self.player_hands[_])
+					if player_hands_value[_]>21: #bust_counter
+						self.player_bust_counter[_]=self.player_bust_counter[_]+1
 				if(_==0):
 					print("\nYou (Player %d) draw %d:" %(_+1,player_hands_value[_]))
 				else:
@@ -183,12 +213,13 @@ class Blackjack:
 			
 			player_hand_value = player_hands_value[0]
 			self.score_keeper(player_hand_value,dealer_hand_value)
-			self.dealer_hand.clear_hand()
 			
+			#Clearing the cards after the game
+			self.dealer_hand.clear_hand()
 			for _ in range(self.no_of_other_players):
 				self.player_hands[_].clear_hand()
 			
-blackjack = Blackjack() #Blackjack(players=4,games=10,player_threshold=17,dealer_threshold=18)
+blackjack = Blackjack() #Blackjack(players=4,games=10,player_threshold=17,dealer_threshold=18,bust_aversion_ratio=0.3)
 blackjack.play()
 
 
