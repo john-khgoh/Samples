@@ -7,12 +7,12 @@ oldlist = [1,2,3,4,5,6,7,8,9,10]
 wordlist = ["one","two","three","four","five","six","seven","eight","nine","ten"]
 newlist = []
 
-def search(str): #lambda function that searches for substring in list of string
+def search(str): #lambda function that searches for substring in list of strings
 	return lambda x:str.find(x)!=-1 
 
 '''
 #Map functions
-newlist = list(map(lambda x:x+1 ,oldlist)) #returns x+1
+newlist = list(map(lambda x:x+1 ,oldlist)) #returns x+1 i.e. 2 to 11
 newlist = list(map(lambda x:pow(x,2),oldlist)) #returns the corresponding square of integers
 newlist = list(map(lambda x:prime(x),oldlist)) #returns the corresponding prime by position e.g. 2,3,5...29
 newlist = list(map(isprime,oldlist)) #returns boolean list (true,false) of whether element is prime
