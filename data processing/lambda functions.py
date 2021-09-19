@@ -4,10 +4,10 @@ from math import pow
 import re
 
 oldlist = [1,2,3,4,5,6,7,8,9,10]
-wordlist = ["one","two","three","four","FIVE","six","seven","eight","nine","ten"]
+wordlist = ["one","two","three","four","five","six","seven","eight","nine","ten"]
 newlist = []
 
-def search(str): #lambda function that searches for substring in string
+def search(str): #lambda function that searches for substring in list of string
 	return lambda x:str.find(x)!=-1 
 
 '''
