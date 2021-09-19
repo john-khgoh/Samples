@@ -156,7 +156,7 @@ class Blackjack:
 			
 		print("####################################################################################################")
 	
-	#Bust aversion is switched on when player gets many prior busts (>bust_threshold). Players will stop hitting at a lowered threshold automatically e.g. 18 to 17
+	#Bust aversion is switched on when players gets many prior busts (>bust_threshold). Players will stop hitting at a lowered threshold automatically e.g. 18 to 17
 	def bust_aversion(self):  
 		for _ in range(self.no_of_other_players):
 			if((self.player_bust_counter[_]>self.bust_threshold)&(self.player_personal_threshold[_]>self.min_allowed_card_value)):
