@@ -1,5 +1,7 @@
 #Using Genetic Algorithm to search for the optimal variables (dataframe columns) in a dataset for machine learning regression/prediction
+#Credits to pygad.readthedocs.io for PyGAD and the example on which this is based
 #(Work in progress)
+
 
 import pygad
 from os import getcwd
@@ -21,7 +23,7 @@ def on_generation(ga_instance):
 
 #Fitness function based on random forest classifier
 def fitness_func(solution, solution_idx):
-	#Data_df if the master copy of the data
+	#Data_df is the master copy of the data
 	global data_df
 	global label_df
 	
