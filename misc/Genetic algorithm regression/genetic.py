@@ -45,7 +45,7 @@ def fitness_func(solution, solution_idx):
 	#Split the train and test data at a 90/10 ratio
 	X_train, X_test, y_train, y_test = train_test_split(data_array,label_df['label'],test_size=0.10)
 	y_test = list(y_test)
-	pipe = RandomForestClassifier(n_jobs=-1).fit(X_train, y_train) #n_jobs=-1 enables multithreading speeding up the RF classifier
+	pipe = RandomForestClassifier(n_jobs=-1).fit(X_train, y_train) #n_jobs=-1 enables multithreading to speed up the RF classifier
 	predictions = pipe.predict(X_test)
 	pred = list(predictions)
 	
