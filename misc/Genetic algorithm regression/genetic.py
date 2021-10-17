@@ -1,6 +1,5 @@
 #Using Genetic Algorithm to search for the optimal variables (dataframe columns) in a dataset for machine learning regression/prediction
 #Credits to pygad.readthedocs.io for PyGAD and the example on which this is based
-#(Work in progress)
 
 
 import pygad
@@ -37,12 +36,16 @@ def fitness_func(solution, solution_idx):
 	#Mutations of the gene will drop columns from the dataframe
 	zero_indices = [i for i, x in enumerate(gene) if x == 0]
 	new_df.drop(new_df.columns[zero_indices],axis=1,inplace=True)
-	data_array = np.array(new_df)
+	#If there are no columns left, set fitness to 0 i.e. dropping all columns is definitely not the optimal solution
+	if(new_df.shape[1]==0):
+		fitness = 0
+		return fitness
+    data_array = np.array(new_df)
 	
 	#Split the train and test data at a 90/10 ratio
 	X_train, X_test, y_train, y_test = train_test_split(data_array,label_df['label'],test_size=0.10)
 	y_test = list(y_test)
-	pipe = RandomForestClassifier().fit(X_train, y_train)
+	pipe = RandomForestClassifier(n_jobs=-1).fit(X_train, y_train) #n_jobs=-1 enables multithreading speeding up the RF classifier
 	predictions = pipe.predict(X_test)
 	pred = list(predictions)
 	
