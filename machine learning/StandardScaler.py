@@ -2,6 +2,7 @@
 
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.pipeline import make_pipeline
+from sklearn.impute import SimpleImputer, KNNImputer
 import numpy as np
 import pandas as pd
 
@@ -10,15 +11,14 @@ class StandardScaler(BaseEstimator,TransformerMixin):
         self.mean = [] #Series means
         self.std = [] #Series standard deviations
         self.signs = None
-    
+        
     def fit(self,series):
-        #self.series = np.array(series)
         self.series = series
         
         #If series is a list
         if(isinstance(self.series,list)):
-            self.mean = np.mean(self.series)
-            self.std = np.std(self.series)
+            self.mean = np.nanmean(self.series)
+            self.std = np.nanstd(self.series)
             
         #If series is an np.array
         elif(isinstance(self.series,np.ndarray)):
@@ -29,15 +29,15 @@ class StandardScaler(BaseEstimator,TransformerMixin):
             else:
                 #1D np.array
                 if(dim==1):
-                    self.mean = np.mean(self.series)
-                    self.std = np.std(self.series)
+                    self.mean = np.nanmean(self.series)
+                    self.std = np.nanstd(self.series)
                 #2D np.array
                 else:
                     #Iterate through columns and get column mean and std
                     r,c = np.shape(series)
                     for row in range(r):
-                        self.mean.append(np.mean(series[row,:]))
-                        self.std.append(np.std(series[row,:]))
+                        self.mean.append(np.nanmean(series[row,:]))
+                        self.std.append(np.nanstd(series[row,:]))
                     self.mean = np.expand_dims(np.array(self.mean).transpose(),1)
                     self.std = np.expand_dims(np.array(self.std).transpose(),1)
                     
@@ -45,6 +45,12 @@ class StandardScaler(BaseEstimator,TransformerMixin):
         elif(isinstance(self.series,(pd.core.frame.DataFrame,pd.core.series.Series))):
             self.mean = list(self.series.mean())
             self.std = list(self.series.std())
+        
+        self.series = np.array(series)
+        div = np.absolute(self.series) + np.float64(1e-12)
+        results = self.series-self.mean
+        abs_results = abs(results) + np.float64(1e-12)
+        self.signs = results/abs_results
         
         return self
     
@@ -67,13 +73,25 @@ class StandardScaler(BaseEstimator,TransformerMixin):
         #Factorized implementation
         results = (self.series * self.std * self.signs) + self.mean
         return results
+    
+values = [1,2,3,np.nan,5,6,7,8]
+price = [2,4,6,np.nan,10,12,14,16]
 
+#values = pd.DataFrame({'values':values})
+#values = pd.DataFrame({'values':values,'price':price})
+values = np.array([values,price])
 
-values = [1,2,3,4,5,6,7,8]
-price = [2,4,6,8,10,12,14,16]
-
-values = pd.DataFrame({'values':values,'price':price})
-#values = np.array([values,price])
+'''
+#print(values)
+#i = SimpleImputer(strategy='mean',add_indicator=True)
+#values = i.fit_transform(values)
+#print(values)
+s = StandardScaler()
+values = s.fit_transform(values)
+print(values)
+values = s.inverse_transform(values)
+print(values)
+'''
 
 test_pipeline = make_pipeline(
     StandardScaler()
