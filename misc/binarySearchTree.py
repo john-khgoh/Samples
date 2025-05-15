@@ -191,7 +191,7 @@ class BinarySearchTree:
                         self.flag = True
                         return None
             
-        if self.tree and key != self.minKey:
+        if self.tree and key != self.minKey and self.size > 1:
             return dfs(self.tree,None,False,False)
         else:
             return TreeNode(None)
