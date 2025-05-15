@@ -102,16 +102,14 @@ class BinarySearchTree:
         def dfs(root):
             if not root:
                 return None
-            
             left = right = None
-            left = dfs(root.left)
-            if root.key == key:
+            
+            if key > root.key:
+                return dfs(root.right)
+            elif key < root.key:
+                return dfs(root.left)
+            else:
                 return root
-            right = dfs(root.right)
-            if left:
-                return left
-            if right:
-                return right
 
         if self.tree:
             return dfs(self.tree)
