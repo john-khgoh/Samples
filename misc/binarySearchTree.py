@@ -1,5 +1,5 @@
 #Simple implementation of a Binary Search Tree
-#Methods include insert,delete,exist,search,swap,toJson
+#Methods include insert,delete,exist,search,swap,predecessorSearch,toJson
 #For the json output, you can visualize it at jsoncrack.com/editor
 
 from random import randint
@@ -147,6 +147,58 @@ class BinarySearchTree:
         if self.exist(oldKey):
             self.delete(oldKey)
             self.insert(newKey)
+    
+    def predecessorSearch(self,key):
+        self.flag = False
+        def dfs(root,parentNode,leftParent,rightParent) -> TreeNode:
+            if not root:
+                return None
+            
+            if root.key > key:
+                res = dfs(root.left,root,False,True)
+                if not res and self.flag:
+                    if leftParent:
+                        self.flag = False
+                        return parentNode
+                    else:
+                        return None
+                if res:
+                    return res
+            elif root.key < key:
+                res = dfs(root.right,root,True,False)
+                if not res and self.flag:
+                    if leftParent:
+                        self.flag = False
+                        return parentNode
+                    else:
+                        return None
+                if res:
+                    return res
+            else: #root.key == key:
+                
+                #Node has left subtree
+                if root.left:
+                    temp = root.left
+                    while temp.right:
+                        temp = temp.right
+                    return temp
+                
+                #Node has no left subtree
+                else:
+                    #Node is the right child of parent
+                    if leftParent: 
+                        #Return parent node value
+                        return parentNode
+                    #Node is the left child of parent
+                    elif rightParent:
+                        #Return closest ancestor which is a left parent if it's child node
+                        self.flag = True
+                        return None
+            
+        if self.tree and key != self.minKey:
+            return dfs(self.tree,None,False,False)
+        else:
+            return TreeNode(None)
     
     def toJson(self) -> str:
         def dfs(root):
