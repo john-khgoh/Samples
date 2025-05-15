@@ -185,13 +185,9 @@ class BinarySearchTree:
                 
                 #Node has no left subtree
                 else:
-                    #Node is the right child of parent
                     if leftParent: 
-                        #Return parent node value
                         return parentNode
-                    #Node is the left child of parent
                     elif rightParent:
-                        #Return closest ancestor which is a left parent if it's child node
                         self.flag = True
                         return None
             
