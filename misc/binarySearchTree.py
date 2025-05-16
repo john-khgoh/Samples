@@ -149,7 +149,6 @@ class BinarySearchTree:
             self.insert(newKey)
     
     def predecessorSearch(self,key):
-        self.flag = False
         def dfs(root,parentNode,leftParent,rightParent) -> TreeNode:
             if not root:
                 return None
@@ -162,8 +161,10 @@ class BinarySearchTree:
                         return parentNode
                     else:
                         return None
-                if res:
+                elif res:
                     return res
+                else:
+                    return None
             elif root.key < key:
                 res = dfs(root.right,root,True,False)
                 if not res and self.flag:
@@ -172,8 +173,10 @@ class BinarySearchTree:
                         return parentNode
                     else:
                         return None
-                if res:
+                elif res:
                     return res
+                else:
+                    return None
             else: #root.key == key:
                 
                 #Node has left subtree
@@ -185,11 +188,71 @@ class BinarySearchTree:
                 
                 #Node has no left subtree
                 else:
-                    if leftParent: 
-                        return parentNode
-                    elif rightParent:
+                    #Node is the left child of parent
+                    if rightParent:
+                        #Return closest ancestor which is a left parent of it's child node
                         self.flag = True
                         return None
+                    #Node is the right child of parent
+                    else: 
+                        #Return parent node value
+                        return parentNode
+                    
+        self.flag = False
+        if self.tree and key != self.minKey and self.size > 1:
+            return dfs(self.tree,None,False,False)
+        else:
+            return TreeNode(None)
+    
+    def successorSearch(self,key):
+        def dfs(root,parentNode,leftParent,rightParent) -> TreeNode:
+            if not root:
+                return None
+            
+            if root.key > key:
+                res = dfs(root.left,root,False,True)
+                if not res and self.flag:
+                    if rightParent:
+                        self.flag = False
+                        return parentNode
+                    else:
+                        return None
+                elif res:
+                    return res
+                else:
+                    return None
+            elif root.key < key:
+                res = dfs(root.right,root,True,False)
+                if not res and self.flag:
+                    if rightParent:
+                        self.flag = False
+                        return parentNode
+                    else:
+                        return None
+                elif res:
+                    return res
+                else:
+                    return None
+            else: #root.key == key:
+                
+                #Node has right subtree
+                if root.right:
+                    temp = root.right
+                    while temp.left:
+                        temp = temp.left
+                    return temp
+                
+                #Node has no right subtree
+                else:
+                    #Node is the right child of parent
+                    if leftParent:
+                        #Return closest ancestor which is a right parent of it's child node
+                        self.flag = True
+                        return None
+                    #Node is the left child of parent
+                    else: 
+                        #Return parent node value
+                        return parentNode
             
         if self.tree and key != self.minKey and self.size > 1:
             return dfs(self.tree,None,False,False)
