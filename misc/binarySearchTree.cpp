@@ -39,6 +39,7 @@ public:
     int findNewMin();
     int findNewMax();
     void swap(int oldKey, int newKey);
+    int findClosestNode(int key);
 
     TreeNode* insertNodeDFS(TreeNode* root, int key);
     TreeNode* deleteNodeDFS(TreeNode* root, int key, bool* foundFlag);
@@ -48,6 +49,7 @@ public:
     TreeNode* predecessorNodeDFS(TreeNode* root, TreeNode* parent, int key, bool leftParent, bool rightParent, bool* searchFlag);
     void findNewMinDFS(TreeNode* root, int* minimum);
     void findNewMaxDFS(TreeNode* root, int* maximum);
+    void findClosestNodeDFS(TreeNode* root, int key, int* closestKey);
     
     //Variables
     TreeNode* tree;
@@ -285,6 +287,39 @@ int BinarySearchTree::findNewMax() {
         findNewMaxDFS(tree, &maximum);
     }
     return maximum;
+}
+
+void BinarySearchTree::findClosestNodeDFS(TreeNode* root, int key, int* closestKey) {
+    if (root == nullptr) {
+        return;
+    }
+    if ((std::abs(key - root->key) < std::abs(key - *closestKey)) && root->key <= key) {
+        *closestKey = root->key;
+    }
+
+    if (key > root->key) {
+        findClosestNodeDFS(root->right, key, closestKey);
+    } else if (key < root->key) {
+        findClosestNodeDFS(root->left,key,closestKey);
+    } else {
+        return;
+    }
+}
+
+int BinarySearchTree::findClosestNode(int key) {
+    if (tree) {
+        if (key <= minKey) {
+            return std::numeric_limits<int>::min();
+        } else if (key >= maxKey) {
+            return maxKey;
+        } else {
+            int* closestKey = &minKey;
+            findClosestNodeDFS(tree,key,closestKey);
+            return *closestKey;
+        }
+    } else {
+        return std::numeric_limits<int>::min();
+    }
 }
 
 void BinarySearchTree::swap(int oldKey, int newKey) {
