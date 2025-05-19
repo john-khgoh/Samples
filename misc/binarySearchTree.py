@@ -147,6 +147,33 @@ class BinarySearchTree:
         if self.exist(oldKey):
             self.delete(oldKey)
             self.insert(newKey)
+
+    def findClosestNode(self,key) -> int:
+        def dfs(root):
+            if not root:
+                return root
+            
+            if (abs(key - root.key) < abs(key - self.closestKey)) and root.key <= key:
+                self.closestKey = root.key
+            
+            if key > root.key:
+                right = dfs(root.right)   
+            elif key < root.key:
+                left = dfs(root.left)
+            else:
+                return root
+        
+        if not self.tree:
+            return float("-inf")
+            
+        if key <= self.minKey:
+            return float("-inf")
+        elif key >= self.maxKey:
+            return self.maxKey
+        
+        self.closestKey = self.minKey   
+        dfs(self.tree)
+        return self.closestKey
     
     def predecessorSearch(self,key):
         def dfs(root,parentNode,leftParent,rightParent) -> TreeNode:
